@@ -28,6 +28,7 @@ public class AtherialRedis {
     private RedisMessageReader reader;
     private RedisMessageWriter writer;
     private String url;
+    private String serverName;
 
     public AtherialRedis() {
     }
@@ -42,8 +43,12 @@ public class AtherialRedis {
     }
 
 
+    public String getServerName() {
+        return serverName;
+    }
 
     public void connect(String serverName) {
+        this.serverName = serverName;
 
         if (url==null) {
             jedisPool = new JedisPool(new JedisPoolConfig(), (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
