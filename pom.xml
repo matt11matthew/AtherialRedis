@@ -50,12 +50,14 @@
 </resources>
 </build>
 <dependencies>
-<dependency>
-  <groupId>redis.clients</groupId>
-  <artifactId>jedis</artifactId>
-  <version>2.9.0</version>
-  <scope>compile</scope>
-</dependency>
+  <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+  <dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>5.1.0</version>
+    <scope>compile</scope>
+  </dependency>
+
 
 
 <!--<dependency>-->

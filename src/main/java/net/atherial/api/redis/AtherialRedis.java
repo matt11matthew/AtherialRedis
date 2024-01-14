@@ -27,8 +27,12 @@ public class AtherialRedis {
     private JedisPool jedisPool;
     private RedisMessageReader reader;
     private RedisMessageWriter writer;
+    private String url;
 
     public AtherialRedis() {
+    }
+    public AtherialRedis(String url) {
+        this.url = url;
     }
 
     public AtherialRedis(String hostName, int port, String password) {
@@ -37,13 +41,15 @@ public class AtherialRedis {
         this.password = password;
     }
 
-    public AtherialRedis(String serverName) {
-        connect(serverName);
-    }
+
 
     public void connect(String serverName) {
 
-        jedisPool = new JedisPool(new JedisPoolConfig(), (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
+        if (url==null) {
+            jedisPool = new JedisPool(new JedisPoolConfig(), (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
+        } else {
+            this.jedisPool = new JedisPool(new JedisPoolConfig(),url);
+        }
 
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.ping();
