@@ -50,28 +50,41 @@ public class AtherialRedis {
     public void connect(String serverName) {
         this.serverName = serverName;
 
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+
         if (url==null) {
-            jedisPool = new JedisPool(new JedisPoolConfig(), (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
+            jedisPool = new JedisPool(jedisPoolConfig, (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
         } else {
-            this.jedisPool = new JedisPool(new JedisPoolConfig(),url);
+            this.jedisPool = new JedisPool(jedisPoolConfig,url);
         }
 
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.ping();
+            String response = jedis.ping();
+            if (!"PONG".equals(response)) {
+                // Handle the scenario where Redis is not responding properly
+                throw new RuntimeException("Failed to ping Redis server.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            // Consider re-throwing, logging, or handling the exception as per your application needs
         }
+
 
         reader = new RedisMessageReader(serverName, this);
         writer = new RedisMessageWriter(serverName, jedisPool);
 
-        new Thread(() -> {
-            try (Jedis jedis = jedisPool.getResource()) {
-                jedis.subscribe(reader, getGlobalChannel());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try (Jedis jedis = jedisPool.getResource()) {
+//                jedis.subscribe(reader, getGlobalChannel());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.subscribe(reader, getGlobalChannel());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendPacket(Object packetContents, String receiver) {
