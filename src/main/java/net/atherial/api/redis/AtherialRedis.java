@@ -87,7 +87,7 @@ public class AtherialRedis {
 //        new Thread(() -> {
 //            try (Jedis jedis = jedisPool.getResource()) {
 //                jedis.subscribe(reader, getGlobalChannel());
-//            } catch (Exception e) {
+////            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
 //        }).start();
