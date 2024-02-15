@@ -52,6 +52,7 @@ public class AtherialRedis {
     }
 
     public void connect(String serverName) {
+        System.out.println("[Redis] connecting to " + hostName +":"+port +" db " + serverName);
         this.serverName = serverName;
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
