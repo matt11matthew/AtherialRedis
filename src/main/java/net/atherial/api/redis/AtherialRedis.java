@@ -42,6 +42,10 @@ public class AtherialRedis {
         this.password = password;
     }
 
+    public AtherialRedis(String hostName, int port) {
+        this.hostName = hostName;
+        this.port = port;
+    }
 
     public String getServerName() {
         return serverName;
@@ -53,7 +57,13 @@ public class AtherialRedis {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 
         if (url==null) {
-            jedisPool = new JedisPool(jedisPoolConfig, (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
+            if (password==null){
+
+                jedisPool = new JedisPool(jedisPoolConfig, (hostName == null ? "localhost" : hostName), port, 0);
+            } else {
+
+                jedisPool = new JedisPool(jedisPoolConfig, (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
+            }
         } else {
             this.jedisPool = new JedisPool(jedisPoolConfig,url);
         }
