@@ -52,12 +52,12 @@ public class AtherialRedis {
     }
 
     public void connect(String serverName) {
-        System.out.println("[Redis] connecting to " + hostName +":"+port +" db " + serverName);
         this.serverName = serverName;
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 
         if (url==null) {
+            System.out.println("[Redis] connecting to " + hostName +":"+port +" db " + serverName);
             if (password==null){
 
                 jedisPool = new JedisPool(jedisPoolConfig, (hostName == null ? "localhost" : hostName), port, 0);
@@ -66,6 +66,7 @@ public class AtherialRedis {
                 jedisPool = new JedisPool(jedisPoolConfig, (hostName == null ? "localhost" : hostName), port, 0, (password.length() < 1 ? null : password));
             }
         } else {
+            System.out.println("[Redis] connecting to " + url);
             this.jedisPool = new JedisPool(jedisPoolConfig,url);
         }
 
@@ -84,18 +85,18 @@ public class AtherialRedis {
         reader = new RedisMessageReader(serverName, this);
         writer = new RedisMessageWriter(serverName, jedisPool);
 
-//        new Thread(() -> {
-//            try (Jedis jedis = jedisPool.getResource()) {
-//                jedis.subscribe(reader, getGlobalChannel());
-////            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.subscribe(reader, getGlobalChannel());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            try (Jedis jedis = jedisPool.getResource()) {
+                jedis.subscribe(reader, getGlobalChannel());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+//        try (Jedis jedis = jedisPool.getResource()) {
+//            jedis.subscribe(reader, getGlobalChannel());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void sendPacket(Object packetContents, String receiver) {
