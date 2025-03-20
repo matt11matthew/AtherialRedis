@@ -10,14 +10,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AtherialRedis {
 
-    private static final String globalChannel;
+    private static  String globalChannel;
     private GenericAtherialPacketListener packetListener;
 
     protected static ConcurrentHashMap<Class<? extends AtherialRedisPacket>, List<AtherialPacketListener>> listeners;
 
+
     static {
         globalChannel = "atherial";
         listeners = new ConcurrentHashMap<>();
+    }
+
+    public static void setGlobalChannel(String globalChannel) {
+        AtherialRedis.globalChannel = globalChannel;
     }
 
     private String hostName;
@@ -52,6 +57,10 @@ public class AtherialRedis {
     }
 
     public void connect(String serverName) {
+        if (globalChannel==null){
+            System.err.println("[Redis] Global channel null");
+            return;
+        }
         this.serverName = serverName;
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();

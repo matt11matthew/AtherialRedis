@@ -3,10 +3,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.matthewe.atherial</groupId>
   <artifactId>AtherialRedis</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <name>AtherialRedis</name>
 
-
+  <distributionManagement>
+    <repository>
+      <id>nexus-releases</id>
+      <url>https://nexus.matthewe.me/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <url>https://nexus.matthewe.me/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 <properties>
 <java.version>1.8</java.version>
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
